@@ -9,7 +9,7 @@
 <meta name="keywords" content="">
 <link href="ionic/css/ionic.min.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
-<script type="text/javascript" src="ionic/js/ionic.bundle.min.js" ></script><link href="" rel="stylesheet">
+<script type="text/javascript" src="ionic/js/ionic.bundle.min.js" ></script>
 </head>
 <body ng-controller="main">
 	<ion-header-bar class="bar-assertive">
@@ -40,14 +40,25 @@
 			    </button>
 			</div>
 			
-			<button class="button button-block button-stable">注册</button>
+			<button class="button button-block button-stable"ng-click="regBtn()">注册</button>
 			<p class="pFooter">已有账号？去<a href="login.html" class="assertive">登录</a></p>
 		</div>
 	</ion-content>
 </body>
 <script>
 	var m1=angular.module('myApp',['ionic']);
-	m1.controller('main', ['$scope','$interval','$http',function($scope,$interval,$http) {
+	m1.service('myHttpService', ['$http', function($http){
+		this.loginrAndregister=function(data,callback){
+			$http({
+				url:"http://datainfo.duapp.com/shopdata/userinfo.php",
+				method:"get",
+				params:data
+			}).success(function(result){
+				callback(result);
+			})
+		}
+	}])
+	m1.controller('main', ['$scope','$interval','$http','myHttpService',function($scope,$interval,$http,myHttpService) {
 		$scope.expression1=true;
 		$scope.expression2=false;
 		$scope.code="验证码";
@@ -55,32 +66,26 @@
 			$scope.expression2=true;
 			$scope.expression1=false;
 			$scope.num=60;
-			
-			$http({
-				url:"http://datainfo.duapp.com/shopdata/userinfo.php",
-				method:"get",
-				//传参数，用params
-				params:{
-					status:"register",
-					userID:$scope.username,
-					password:$scope.password
+			var timer=$interval(function(){
+				$scope.num--;
+				if($scope.num==0){
+					$interval.cancel(timer);
+					$scope.expression1=true;
+					$scope.expression2=false;
 				}
-			}).success(function(res){
-				console.log(res)
-			}).error(function(){
-	
-			})
-//			var timer=$interval(function(){
-//				$scope.num--;
-//				if($scope.num==0){
-//					$interval.cancel(timer);
-//					$scope.expression1=true;
-//					$scope.expression2=false;
-//				}
-//			},1000);
-//			
+			},1000);
+		
 		}
-
+		
+		$scope.regBtn=function(){
+			myHttpService.loginrAndregister({
+				status:"register",
+				userID:$scope.username,
+				password:$scope.password
+			},function(res){
+				console.log(res);
+			})
+		}
 	}]);
 </script>
 </html>

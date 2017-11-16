@@ -10,6 +10,7 @@
 <link href="ionic/css/ionic.min.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
 <script type="text/javascript" src="ionic/js/ionic.bundle.min.js" ></script><link href="" rel="stylesheet">
+<script type="text/javascript" src="js/index.js" ></script>
 </head>
 <body ng-controller="main">
 	<ion-header-bar class="bar-assertive">
@@ -25,15 +26,34 @@
 				密码：
 				<input type="password" placeholder="请输入您的密码~" ng-model="password">
 			</label>
-			<button class="button button-block button-stable">登录</button>
+			<button class="button button-block button-stable" ng-click="loginBtn()">登录</button>
 			<p class="pFooter">没有账号？去<a href="reg.html" class="assertive">注册</a></p>
 		</div>
 	</ion-content>
 </body>
 <script>
 	var m1=angular.module('myApp',['ionic']);
-	m1.controller('main', ['$scope','$interval',function($scope,$interval) {
-		
+	m1.service('myHttpService', ['$http', function($http){
+		this.loginrAndregister=function(data,callback){
+			$http({
+				url:"http://datainfo.duapp.com/shopdata/userinfo.php",
+				method:"get",
+				params:data
+			}).success(function(result){
+				callback(result);
+			})
+		}
+	}])
+	m1.controller('main', ['$scope','$interval','myHttpService',function($scope,$interval,myHttpService) {
+		$scope.loginBtn=function(){
+			myHttpService.loginrAndregister({
+				status:"login",
+				userID:$scope.name,
+				password:$scope.password
+			},function(res){
+				console.log(res);
+			})
+		}
 
 	}]);
 </script>
