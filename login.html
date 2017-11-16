@@ -8,20 +8,33 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <link href="ionic/css/ionic.min.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
 <script type="text/javascript" src="ionic/js/ionic.bundle.min.js" ></script><link href="" rel="stylesheet">
 </head>
 <body ng-controller="main">
-	<ion-header-bar class="bar-dark">
+	<ion-header-bar class="bar-assertive">
 		<h1 class="title">开赞名片</h1>
 	</ion-header-bar>
 	<ion-content>
-		
+		<div class="list list-inset">
+			<label for="" class="item item-input">
+				用户名：
+				<input type="text" placeholder="请输入您的用户名~" ng-model="name">
+			</label>
+			<label for="" class="item item-input">
+				密码：
+				<input type="password" placeholder="请输入您的密码~" ng-model="password">
+			</label>
+			<button class="button button-block button-stable">登录</button>
+			<p class="pFooter">没有账号？去<a href="reg.html" class="assertive">注册</a></p>
+		</div>
 	</ion-content>
 </body>
 <script>
 	var m1=angular.module('myApp',['ionic']);
-	m1.controller('main', ['$scope', function ($scope) {
+	m1.controller('main', ['$scope','$interval',function($scope,$interval) {
 		
+
 	}]);
 </script>
 </html>
